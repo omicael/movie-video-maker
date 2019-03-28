@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/micsmics/movie-video-maker#readme",
   "dependencies": {
+    "mysql": "^2.16.0",
     "readline-sync": "^1.4.9"
   }
 }
