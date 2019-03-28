@@ -1,0 +1,12 @@
+{
+    "quantityOfImages": 10,
+    "youtube": {
+        "user": "",
+        "password": ""
+    },
+    "twitch": {
+        "user": "",
+        "password": ""
+    },
+    "moviesListFilePath": "../movies/movies-list.json"
+}
