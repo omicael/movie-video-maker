@@ -1,5 +1,6 @@
 {
     "quantityOfImages": 10,
+    "moviesLanguage": "pt-BR",
     "youtube": {
         "user": "",
         "password": ""
@@ -8,5 +9,7 @@
         "user": "",
         "password": ""
     },
-    "moviesListFilePath": "../movies/movies-list.json"
+    "moviesPath": "../movies/",
+    "moviesListFilePath": "movies-list.json",
+    "movieContentFileName": "movie-content.json"
 }

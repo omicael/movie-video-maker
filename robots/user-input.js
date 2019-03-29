@@ -1,6 +1,6 @@
 const readline = request('readline-sync')
 
-function robot(moviesContent) {
+function robot(moviesList) {
     operation.quantityOfMovies = askAndReturnQuantityOfMovies()
     operation.quantityOfImages = askAndReturnQuantityOfImages()
     
