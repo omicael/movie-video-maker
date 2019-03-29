@@ -11,7 +11,9 @@ async function fetchMovieInTMDB(movieId) {
         qs: { language: moviesLanguage, api_key: theMovieDatabaseApiKey },
         body: '{}' 
     }
-  
+
+    console.log('  Procurando filme no TMDB')
+
     const resultado = await new Promise(function (resolve, reject) {
         request(options, function (error, response, body) {
             if (error)
@@ -21,10 +23,13 @@ async function fetchMovieInTMDB(movieId) {
         });
     })
 
+    console.log('    Procurando imagens do filme')
+
     const TMDBMovie = JSON.parse(resultado);
     const TMDBMovieImages = await fetchMovieImagesInTMDB(movieId);
     const movieContent = mountMovieContent(TMDBMovie, TMDBMovieImages);
     
+    console.log('  Dados completos para o filme \'' + movieContent.title + '\'\n')
     return movieContent
 
 

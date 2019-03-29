@@ -11,20 +11,24 @@ function start() {
     const moviesList = []
 
     if (!robots.state.fileExists(robots.settings.moviesPath + robots.settings.moviesListFilePath)) {
+        console.log('\nBuscando lista de filmes')
         robots.fetchMoviesList(moviesList, function(moviesList) {  
             robots.state.save(moviesList, robots.settings.moviesPath + robots.settings.moviesListFilePath)
             orchestrator(moviesList)
         })
     } 
     else {
+        console.log('\nLendo lista de filmes')
         orchestrator(robots.state.load(robots.settings.moviesPath + robots.settings.moviesListFilePath))
     }
 
     async function orchestrator(moviesList) {
+        cont = 1
+        console.log('\nFilme nº ' + cont++)
         const movieContent = await robots.movieRobot.fetchMovieInTMDB(moviesList[1].id)
         robots.movieRobot.saveMovieData(movieContent)
         
-        console.log(movieContent)     
+        //console.log(movieContent)     
     }
     
 }
