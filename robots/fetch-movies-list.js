@@ -1,7 +1,7 @@
 const mysql = require('mysql')
 const database = require('../credentials/database.json')
 
-function robot(moviesContent, func) {
+function robot(moviesList, func) {
     const connection = mysql.createConnection(database)
     
     fetchMoviesListInDatabase(connection, func)
@@ -16,11 +16,12 @@ function robot(moviesContent, func) {
 
             conn.end()
             results.forEach((result) => {
-                moviesContent.push({
-                    id: result.id
+                moviesList.push({
+                    id: result.id,
+                    done: false
                 })
             })
-            func(moviesContent)
+            func(moviesList)
         })
     }
 }
