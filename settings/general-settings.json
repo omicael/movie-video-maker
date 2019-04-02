@@ -11,5 +11,6 @@
     },
     "moviesPath": "../movies/",
     "moviesListFilePath": "movies-list.json",
-    "movieContentFileName": "movie-content.json"
+    "movieContentFileName": "movie-content.json",
+    "TMDBimagePath": "https://image.tmdb.org/t/p/original/"
 }

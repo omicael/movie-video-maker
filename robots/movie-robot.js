@@ -30,6 +30,8 @@ async function fetchMovieInTMDB(movieId) {
     const movieContent = mountMovieContent(TMDBMovie, TMDBMovieImages);
     
     console.log('  Dados completos para o filme \'' + movieContent.title + '\'\n')
+
+    saveMovieData(movieContent)
     return movieContent
 
 
@@ -84,10 +86,18 @@ async function fetchMovieInTMDB(movieId) {
 }
 
 function saveMovieData(movieContent) {
+    console.log('  Salvando dados do filme')
     state.save(movieContent, settings.moviesPath + movieContent.id + '/' + settings.movieContentFileName)
+}
+
+function loadMovieData(movieId) {
+    console.log('> lendo dados do filme')
+    const movieContent = state.load(settings.moviesPath + movieId + '/' + settings.movieContentFileName)
+    return movieContent
 }
 
 module.exports = {
     fetchMovieInTMDB,
-    saveMovieData
+    saveMovieData,
+    loadMovieData
 }

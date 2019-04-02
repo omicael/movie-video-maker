@@ -3,7 +3,8 @@ const robots = {
     //userInput: require('./robots/user-input.js'),
     fetchMoviesList: require('./robots/fetch-movies-list.js'),
     state: require('./robots/state.js'),
-    movieRobot: require('./robots/movie-robot.js')
+    movieRobot: require('./robots/movie-robot.js'),
+    imageRobot: require('./robots/image.js')
 }
 
 
@@ -25,10 +26,12 @@ function start() {
     async function orchestrator(moviesList) {
         cont = 1
         console.log('\nFilme nº ' + cont++)
-        const movieContent = await robots.movieRobot.fetchMovieInTMDB(moviesList[1].id)
-        robots.movieRobot.saveMovieData(movieContent)
         
-        //console.log(movieContent)     
+        //const movieContent = await robots.movieRobot.fetchMovieInTMDB(moviesList[1].id)
+        const movieContent = robots.movieRobot.loadMovieData(moviesList[1].id)
+        await robots.imageRobot(movieContent)
+
+        
     }
     
 }
