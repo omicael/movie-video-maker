@@ -1,5 +1,5 @@
 const request = require('request')
-const state = require('../robots/state.js')
+const state = require('./state.js')
 const settings = require('../settings/general-settings.json')
 const theMovieDatabaseApiKey = require('../credentials/the-movie-database.json').apiKey
 const moviesLanguage = require('../settings/general-settings.json').moviesLanguage
@@ -31,7 +31,7 @@ async function fetchMovieInTMDB(movieId) {
     
     console.log('  Dados completos para o filme \'' + movieContent.title + '\'\n')
 
-    saveMovieData(movieContent)
+    await saveMovieData(movieContent)
     return movieContent
 
 
@@ -77,17 +77,19 @@ async function fetchMovieInTMDB(movieId) {
         })
 
         const backdrops = JSON.parse(resultado).backdrops
-        backdrops.forEach((backdrop) => {
-            images.push(backdrop.file_path)
-        })
+        if (backdrops) {
+            backdrops.forEach((backdrop) => {
+                images.push(backdrop.file_path)
+            })
+        }
 
         return images
     }
 }
 
-function saveMovieData(movieContent) {
+async function saveMovieData(movieContent) {
     console.log('  Salvando dados do filme')
-    state.save(movieContent, settings.moviesPath + movieContent.id + '/' + settings.movieContentFileName)
+    await state.save(movieContent, settings.moviesPath + movieContent.id + '/' + settings.movieContentFileName)
 }
 
 function loadMovieData(movieId) {

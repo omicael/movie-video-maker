@@ -1,11 +1,39 @@
 const fs = require('fs')
 
-function save(content, filepath) {
+async function save(content, filepath) {
     const contentString = JSON.stringify(content)
-    fs.mkdir(filepath.substring(0, filepath.lastIndexOf('/')), { recursive: true }, (err) => {
-        if (err) throw err;
-    });
-    return fs.writeFileSync(filepath, contentString)
+    const folderpath = filepath.substring(0, filepath.lastIndexOf('/'))
+
+    await new Promise((resolve, reject) => { 
+        fs.mkdir(folderpath, { recursive: true }, (err) => {
+            if (err) {
+                if (err.code == 'EEXIST') {
+                    resolve()
+                }
+                else {
+                    console.log(`< - erro na criacao da pasta ${folderpath}`)
+                    console.log(err);
+                    reject()
+                }
+            }
+            else {
+                resolve()
+            }
+        });
+    })
+
+    return await new Promise((resolve, reject) => {
+        fs.writeFile(filepath, contentString, 'utf-8', (err) => {
+            if (err) {
+                console.log(`< - erro em salvar o arquivo ${filepath}`)
+                console.log(err)
+                reject()
+            }
+            else {
+                resolve()
+            }
+        })
+    })
 }
 
 function load(filepath) {
