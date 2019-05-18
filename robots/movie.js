@@ -32,6 +32,7 @@ async function fetchMovieInTMDB(movieId) {
     console.log('  Dados completos para o filme \'' + movieContent.title + '\'\n')
 
     await saveMovieData(movieContent)
+
     return movieContent
 
 

@@ -1,5 +1,5 @@
 {
-    "showLogMessages": false,
+    "showLogMessages": true,
     "quantityOfImages": 20,
     "moviesLanguage": "pt-BR",
     "youtube": {
@@ -26,5 +26,13 @@
             "height": 1080
         },
         "blackImage": "http://ofilme.org/wp-content/uploads/2019/04/black-image.jpg"
+    },
+    "youtubeApi": {
+        "quota": 10000,
+        "neededCredits": {
+            "uploadVideo": 1605,
+            "uploadThumbnail": 51
+        },
+        "timeQuotaResets": 4
     }
 }
