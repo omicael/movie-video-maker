@@ -5,23 +5,40 @@ const fs = require('fs')
 async function robot(movieContent) {
     creatingFolder(settings.moviesPath + movieContent.id + '/images/')
     await downloadAllImages(movieContent)
-    console.log('> download das imagens concluido')
-
-    function creatingFolder(filePath) {
+    
+    async function creatingFolder(filePath) {
         if (!fs.existsSync(filePath)) {
-            fs.mkdir(filePath.substring(0, filePath.lastIndexOf('/')), { recursive: true }, (err) => {
-                if (err) throw err;
-            });
-            console.log('pasta criada')
+            await new Promise((resolve, reject) => { 
+                fs.mkdir(filePath.substring(0, filePath.lastIndexOf('/')), { recursive: true }, (err) => {
+                    if (err) {
+                        console.log(err);
+                        reject()
+                    }
+                    else {
+                        resolve()
+                    }
+                });
+            })
         }
     }
 
     async function downloadAllImages(movieContent) {
-        for (let imageIndex = 0; imageIndex < movieContent.images.length; imageIndex++){
+        console.log('> Downloading images')
+
+        /* trata se não encontrar nenhuma imagem */
+        if (movieContent.images.length == 0) {
+            movieContent.images.push(settings.video.blackImage)
+        }
+
+
+        for (let imageIndex = 0; imageIndex < settings.quantityOfImages; imageIndex++){
             try {
-                await downloadAndSave(settings.TMDBimagePath + movieContent.images[imageIndex], settings.moviesPath + movieContent.id + '/images/' + imageIndex + '-original.png')
+                const baseImageUrl = (movieContent.images[imageIndex % movieContent.images.length][0] == '/') ? settings.TMDBimagePath : ''
+                const imageUrl = baseImageUrl + movieContent.images[imageIndex % movieContent.images.length]
+
+                await downloadAndSave(imageUrl, settings.moviesPath + movieContent.id + '/images/' + imageIndex + '-original.png')
             } catch (error) {
-                console.log(`> [${imageIndex}] Erro ao baixar (${movieContent.images[imageIndex]}): ${error}`)
+                console.log(`> [${imageIndex}] Erro ao baixar (${movieContent.images[imageIndex % movieContent.images.length]}): ${error}`)
             }
         }
     }

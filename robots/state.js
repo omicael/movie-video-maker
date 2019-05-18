@@ -1,10 +1,21 @@
 const fs = require('fs')
 
-function save(content, filepath) {
+async function save(content, filepath) {
     const contentString = JSON.stringify(content)
-    fs.mkdir(filepath.substring(0, filepath.lastIndexOf('/')), { recursive: true }, (err) => {
-        if (err) throw err;
-    });
+    const folderpath = filepath.substring(0, filepath.lastIndexOf('/'))
+    if (!fileExists(folderpath)) {
+        await new Promise((resolve, reject) => { 
+            fs.mkdir(folderpath, { recursive: true }, (err) => {
+                if (err) {
+                    throw err;
+                    reject()
+                }
+                else {
+                    resolve()
+                }
+            });
+        })
+    }
     return fs.writeFileSync(filepath, contentString)
 }
 
