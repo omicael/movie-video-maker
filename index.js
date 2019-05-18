@@ -50,7 +50,7 @@ start()
 
 function showOrDisableLogMessages (show) {
     const fs = require('fs')
-    const data = fs.readFileSync('/home/midas/Área de Trabalho/micael/06 Rodando com FMA/fma_genre/genre_small/list.tr', 'utf8').toString().split('\n')
+    const data = fs.readFileSync('/list.tr', 'utf8').toString().split('\n')
     const limits = {}
 
     /* gets limits from args */
@@ -63,7 +63,7 @@ function showOrDisableLogMessages (show) {
     if (!show) {
         console.log = function (message) {
             if (message[1] == 'M') { 
-                oldConsole(`- processando os áudios e gerando as features - ${cont} de 6400.. /home/midas/Área de Trabalho/micael/06 Rodando com FMA/fma_genre/genre_small/${data[cont]}`)
+                oldConsole(`${data[cont]}`)
                 cont++
             }
             // else if (message[0] == '<') {
