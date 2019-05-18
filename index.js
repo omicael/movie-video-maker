@@ -18,7 +18,6 @@ function start() {
     process.argv.length > 2 ? (limits.bottom = Math.ceil(process.argv[2])) : (limits.bottom = 0)
     process.argv.length > 3 ? (limits.upper = Math.ceil(process.argv[3])) : (limits.upper = Math.ceil(limits.bottom) + 1000)
 
-
     if (!robots.state.fileExists(robots.settings.moviesPath + robots.settings.moviesListFilePath)) {
         console.log('\nFetching movies list')
         robots.fetchMoviesList(moviesList, function(moviesList) {  

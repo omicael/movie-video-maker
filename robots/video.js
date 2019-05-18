@@ -11,7 +11,7 @@ async function robot(movieContent) {
     await createAllSentenceImages(movieContent)
     await createAllYouTubeThumbnails(movieContent)
     await createVideos(movieContent)
-    await joinVideoWithVideoAfterMovie(movieContent)
+    //await joinVideoWithVideoAfterMovie(movieContent)
     
     
     async function convertAllImages(movieContent) {
@@ -70,7 +70,11 @@ async function robot(movieContent) {
     async function removeOriginalImage(imageIndex, movieId) {
         /* exclui a imagem original */
         return new Promise((resolve, reject) => {
-            fs.unlinkSync(path.normalize(`${__dirname}/../${settings.moviesPath}${movieId}/images/${imageIndex}-original.png`))
+            fs.unlinkSync(path.normalize(`${__dirname}/../${settings.moviesPath}${movieId}/images/${imageIndex}-original.png`), function (err) {
+              if (err) {
+                reject()
+              }
+            })
             resolve()
         })
     }

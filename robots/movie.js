@@ -31,7 +31,8 @@ async function fetchMovieInTMDB(movieId) {
     
     console.log('  Dados completos para o filme \'' + movieContent.title + '\'\n')
 
-    saveMovieData(movieContent)
+    await saveMovieData(movieContent)
+
     return movieContent
 
 
@@ -77,17 +78,19 @@ async function fetchMovieInTMDB(movieId) {
         })
 
         const backdrops = JSON.parse(resultado).backdrops
-        backdrops.forEach((backdrop) => {
-            images.push(backdrop.file_path)
-        })
+        if (backdrops) {
+            backdrops.forEach((backdrop) => {
+                images.push(backdrop.file_path)
+            })
+        }
 
         return images
     }
 }
 
-function saveMovieData(movieContent) {
+async function saveMovieData(movieContent) {
     console.log('  Salvando dados do filme')
-    state.save(movieContent, settings.moviesPath + movieContent.id + '/' + settings.movieContentFileName)
+    await state.save(movieContent, settings.moviesPath + movieContent.id + '/' + settings.movieContentFileName)
 }
 
 function loadMovieData(movieId) {
