@@ -5,27 +5,28 @@ const path = require('path')
 
 async function robot(movieContent) {
     await creatingFolder(path.normalize(__dirname + '/../' + settings.moviesPath + movieContent.id + '/images/'))
-    console.log('< - acabou a funcao')
     await downloadAllImages(movieContent)
     
     async function creatingFolder(filePath) {
         await new Promise((resolve, reject) => { 
-            fs.mkdir(filePath.substring(0, filePath.lastIndexOf('/')), { recursive: true }, (err) => {
+            lastSlashPosition = (filePath.lastIndexOf('/') != -1) ? filePath.lastIndexOf('/') : filePath.lastIndexOf('\\')
+            
+            fs.mkdir(filePath.substring(0, lastSlashPosition), { recursive: true }, (err) => {
                 if (err) {
                     if (err.code == 'EEXIST') {
                         /* pasta ja existia */
-                        console.log('< - pasta existia')
+                        console.log('< directory already existed')
                         resolve()
                     }
                     else {
-                        console.log('erro na criação da pasta images')
+                        console.log('< erro na criação da pasta images')
                         console.log(err)
                         throw err
                         reject()
                     }
                 }
                 else {
-                    console.log('< - pasta criada')
+                    console.log('> directory created successfully')
                     resolve()
                 }
             });
@@ -33,7 +34,7 @@ async function robot(movieContent) {
     }
 
     async function downloadAllImages(movieContent) {
-        console.log('> Downloading images')
+        console.log('> downloading images')
 
         /* trata se não encontrar nenhuma imagem */
         if (movieContent.images.length == 0) {
@@ -60,7 +61,7 @@ async function robot(movieContent) {
 
     async function downloadAndSave(url, fileName) {
         return imageDownloader.image({
-            url, url,
+            url: url,
             dest: fileName
         })
     }
