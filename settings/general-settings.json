@@ -1,5 +1,6 @@
 {
-    "quantityOfImages": 10,
+    "showLogMessages": true,
+    "quantityOfImages": 20,
     "moviesLanguage": "pt-BR",
     "youtube": {
         "user": "",
@@ -12,5 +13,26 @@
     "moviesPath": "../movies/",
     "moviesListFilePath": "movies-list.json",
     "movieContentFileName": "movie-content.json",
-    "TMDBimagePath": "https://image.tmdb.org/t/p/original/"
+    "TMDBimagePath": "https://image.tmdb.org/t/p/original/",
+    "video": {
+        "imageDuration": 7,
+        "frameRate": 25,
+        "thumbnailSize": {
+            "width": 320,
+            "height": 180
+        },
+        "videoSize": {
+            "width": 1920,
+            "height": 1080
+        },
+        "blackImage": "http://ofilme.org/wp-content/uploads/2019/04/black-image.jpg"
+    },
+    "youtubeApi": {
+        "quota": 10000,
+        "neededCredits": {
+            "uploadVideo": 1605,
+            "uploadThumbnail": 51
+        },
+        "timeQuotaResets": 4
+    }
 }

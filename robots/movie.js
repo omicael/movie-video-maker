@@ -1,5 +1,5 @@
 const request = require('request')
-const state = require('../robots/state.js')
+const state = require('./state.js')
 const settings = require('../settings/general-settings.json')
 const theMovieDatabaseApiKey = require('../credentials/the-movie-database.json').apiKey
 const moviesLanguage = require('../settings/general-settings.json').moviesLanguage
