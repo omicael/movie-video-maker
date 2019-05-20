@@ -18,8 +18,8 @@
         "imageDuration": 7,
         "frameRate": 25,
         "thumbnailSize": {
-            "width": 320,
-            "height": 180
+            "width": 1920,
+            "height": 1080
         },
         "videoSize": {
             "width": 1920,

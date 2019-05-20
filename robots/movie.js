@@ -12,9 +12,9 @@ async function fetchMovieInTMDB(movieId) {
         body: '{}' 
     }
 
-    console.log('  Procurando filme no TMDB')
+    console.log('> searching movie in TMDB')
 
-    const resultado = await new Promise(function (resolve, reject) {
+    const result = await new Promise(function (resolve, reject) {
         request(options, function (error, response, body) {
             if (error)
                 reject(error)
@@ -23,15 +23,16 @@ async function fetchMovieInTMDB(movieId) {
         });
     })
 
-    console.log('    Procurando imagens do filme')
+    console.log('> searching movie images')
 
-    const TMDBMovie = JSON.parse(resultado);
+    const TMDBMovie = JSON.parse(result);
     const TMDBMovieImages = await fetchMovieImagesInTMDB(movieId);
     const movieContent = mountMovieContent(TMDBMovie, TMDBMovieImages);
     
-    console.log('  Dados completos para o filme \'' + movieContent.title + '\'\n')
+    console.log('> completed data for the movie: ' + movieContent.title)
 
-    saveMovieData(movieContent)
+    await saveMovieData(movieContent)
+
     return movieContent
 
 
@@ -77,21 +78,23 @@ async function fetchMovieInTMDB(movieId) {
         })
 
         const backdrops = JSON.parse(resultado).backdrops
-        backdrops.forEach((backdrop) => {
-            images.push(backdrop.file_path)
-        })
+        if (backdrops) {
+            backdrops.forEach((backdrop) => {
+                images.push(backdrop.file_path)
+            })
+        }
 
         return images
     }
 }
 
-function saveMovieData(movieContent) {
-    console.log('  Salvando dados do filme')
-    state.save(movieContent, settings.moviesPath + movieContent.id + '/' + settings.movieContentFileName)
+async function saveMovieData(movieContent) {
+    console.log('> saving movie data')
+    await state.save(movieContent, settings.moviesPath + movieContent.id + '/' + settings.movieContentFileName)
 }
 
 function loadMovieData(movieId) {
-    console.log('> lendo dados do filme')
+    console.log('> loading movie data')
     const movieContent = state.load(settings.moviesPath + movieId + '/' + settings.movieContentFileName)
     return movieContent
 }

@@ -25,8 +25,8 @@ async function robot(movieContent) {
         return new Promise((resolve, reject) => {
             const inputFile = path.normalize(`${__dirname}/../${settings.moviesPath}${movieId}/images/${imageIndex}-original.png[0]`)
             const outputFile = path.normalize(`${__dirname}/../${settings.moviesPath}${movieId}/images/${imageIndex}-converted.jpg`)
-            const width = 1920
-            const height = 1080
+            const width = settings.video.videoSize.width
+            const height = settings.video.videoSize.height
 
             gm()
               .in(inputFile)
@@ -61,16 +61,19 @@ async function robot(movieContent) {
                   console.log(error)
                   return reject(error)
               }
-              console.log(`> Image converted: ${inputFile}`)
+              console.log(`> image converted: ${inputFile}`)
               resolve()
               })
         })
     }
 
     async function removeOriginalImage(imageIndex, movieId) {
-        /* exclui a imagem original */
         return new Promise((resolve, reject) => {
-            fs.unlinkSync(path.normalize(`${__dirname}/../${settings.moviesPath}${movieId}/images/${imageIndex}-original.png`))
+            fs.unlinkSync(path.normalize(`${__dirname}/../${settings.moviesPath}${movieId}/images/${imageIndex}-original.png`), function (err) {
+              if (err) {
+                reject()
+              }
+            })
             resolve()
         })
     }
@@ -88,8 +91,8 @@ async function robot(movieContent) {
             const captionModel = path.normalize(`${__dirname}/../content/caption-model-${service}.png`)
             const outputFile = path.normalize(`${__dirname}/../${settings.moviesPath}${movieId}/images/${imageIndex}-sentence-${service}.jpg`)
             
-            const width = 1920
-            const height = 1080
+            const width = settings.video.videoSize.width
+            const height = settings.video.videoSize.height
             
 
             gm()
@@ -116,7 +119,7 @@ async function robot(movieContent) {
                   return reject(error)
               }
 
-              console.log(`> Sentence image created: ${outputFile}`)
+              console.log(`> sentence image created: ${outputFile}`)
               resolve()
             })
         })
@@ -131,8 +134,6 @@ async function robot(movieContent) {
       for (let thumbnailId = 0; thumbnailId < thumbnailModels.length; thumbnailId++) {
           await createYouTubeThumbnail(movieContent.id, thumbnailId, thumbnailModels[thumbnailId])
       }
-
-
     }
 
     async function createYouTubeThumbnail(movieId, thumbnailId, thumbnailModel) {
@@ -140,8 +141,8 @@ async function robot(movieContent) {
           const inputFile = path.normalize(`${__dirname}/../${settings.moviesPath}${movieId}/images/0-converted.jpg[0]`)
           const outputFile = path.normalize(`${__dirname}/../${settings.moviesPath}${movieId}/images/thumbnail-${thumbnailId}.jpg`)
 
-          const width = 1920
-          const height = 1080
+          const width = settings.video.thumbnailSize.width
+          const height = settings.video.thumbnailSize.height
           
           gm()
             
@@ -167,7 +168,7 @@ async function robot(movieContent) {
                 return reject(error)
               }
 
-              console.log(`> Thumbnail image created: ${outputFile}`)
+              console.log(`> thumbnail image created: ${outputFile}`)
               resolve()
             })
          })
@@ -192,7 +193,7 @@ async function robot(movieContent) {
 
         /* comando: ffmpeg -y -framerate 1/7 -i %20d-sentence-youtube.jpg -r 25 -pix_fmt yuv420p video-youtube.mp4 */
 
-        console.log(`> Starting FFMPEG for ${service}`)
+        console.log(`> starting FFMPEG for ${service}`)
 
         const render = spawn('ffmpeg', [
           '-y',
@@ -246,7 +247,7 @@ async function robot(movieContent) {
 
         /* comando: ffmpeg -y -framerate 1/120 -i ../content/caption-image-after.jpg -r 25 -pix_fmt yuv420p ../content/video-after-movie.mp4 */
 
-        console.log(`> Starting FFMPEG for video-after-movie`)
+        console.log(`> starting FFMPEG for video-after-movie`)
 
         const render = spawn('ffmpeg', [
           '-y',
@@ -297,11 +298,11 @@ async function robot(movieContent) {
     async function joinVideos(movieContent, service) {
       return new Promise((resolve, reject) => {
         const inputFile = path.normalize(`${__dirname}/../content/files-to-join.txt`)
-        const outputFile = path.normalize(`${__dirname}/../${settings.moviesPath}${movieContent.id}/MOV${randomString(10, 'aA#')}-${service}.mp4`)
+        const outputFile = path.normalize(`${__dirname}/../${settings.moviesPath}${movieContent.id}/MOV-${randomString(10, 'aA#')}-${service}.mp4`)
 
         /* comando: ffmpeg -f concat -safe 0 -i files-to-join.txt -c copy video-final.mp4 */
 
-        console.log(`> Starting FFMPEG for join videos for ${service}`)
+        console.log(`> starting FFMPEG for join videos for ${service}`)
 
         const render = spawn('ffmpeg', [
           '-y',
