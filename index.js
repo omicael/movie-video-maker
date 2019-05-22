@@ -12,10 +12,12 @@ const robots = {
 function start() {
     const moviesList = []
     const limits = {}
+    const youtubeUser = {}
 
     /* gets limits from args */
     process.argv.length > 2 ? (limits.bottom = Math.ceil(process.argv[2])) : (limits.bottom = 0)
     process.argv.length > 3 ? (limits.upper = Math.ceil(process.argv[3])) : (limits.upper = Math.ceil(limits.bottom) + 1000)
+    process.argv.length > 4 ? (youtubeUser.email = process.argv[4]) : (console.log('> enter with an email address'))
 
     if (!robots.state.fileExists(robots.settings.moviesPath + robots.settings.moviesListFilePath)) {
         console.log('> fetching movies list')
@@ -34,41 +36,13 @@ function start() {
             console.log(`\n> movie nº ${cont}`)
             
             const movieContent = await robots.movie.fetchMovieInTMDB(moviesList[cont].id)
-            ////const movieContent = robots.movie.loadMovieData(moviesList[cont].id)
+            //const movieContent = robots.movie.loadMovieData(moviesList[cont].id)
             //await robots.image(movieContent)
             //await robots.video(movieContent)
-            //await robots.youtube(movieContent)
-            credentials = require('./robots/credentials.js')
-            currentCredential = await credentials.getCredentialJsonFile(3000)
-            console.log(currentCredential)
-            await credentials.insertRequestInCredential(currentCredential, 3000)
-            currentCredential = await credentials.getCredentialJsonFile(2000, currentCredential)
-            console.log(currentCredential)
-            await credentials.insertRequestInCredential(currentCredential, 2000)
-            currentCredential = await credentials.getCredentialJsonFile(15000, currentCredential)
-            console.log(currentCredential)
-            
+            await robots.youtube.uploadToYoutube(movieContent, youtubeUser)
 
             console.log('> done')
-            return
         }
-        const movieContent = robots.movie.loadMovieData(moviesList[2].id)
-        const authorizationToken = await robots.youtube.authenticateOnYoutube()
-        await robots.youtube.uploadToYoutube(movieContent)
-
-        console.log('trying again')
-
-        const movieContent2 = robots.movie.loadMovieData(moviesList[1].id)
-        await robots.youtube.uploadToYoutube(movieContent2)
-
-        await robots.youtube.uploadToYoutube(movieContent)
-        await robots.youtube.uploadToYoutube(movieContent2)
-        await robots.youtube.uploadToYoutube(movieContent)
-        await robots.youtube.uploadToYoutube(movieContent2)
-        await robots.youtube.uploadToYoutube(movieContent)
-        await robots.youtube.uploadToYoutube(movieContent2)
-
-        //console.log(movieContent)
     }
     
 }

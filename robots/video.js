@@ -228,7 +228,7 @@ async function robot(movieContent) {
       
       const services = [
         'youtube',
-        'twitch'
+        //'twitch'
       ]
 
       for (let serviceId = 0; serviceId < services.length; serviceId++) {
