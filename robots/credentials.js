@@ -8,30 +8,29 @@ async function getCredentialJsonFile(neededCredits, currentCredential = null) {
     const credentialsList = state.load(__dirname + '/../credentials/google-youtube/credentialsCounter.json')
     await refreshCredentialsList(credentialsList)
 
-    if (currentCredential != null && settings.youtubeApi.quota - verifyCredentialCreditsUsed(currentCredential) < neededCredits) {
+    if (currentCredential != null && settings.youtubeApi.quota - verifyCredentialCreditsUsed(currentCredential) > neededCredits) {
         return currentCredential
     } 
     else {
-        let randomCredential
+        let nextCredential
         do {
             if (credentialsList.length > 0) {
-                const randomNumber = Math.floor(Math.random() * (credentialsList.length))
-                randomCredential = credentialsList.splice(randomNumber, 1)[0]
+                nextCredential = credentialsList.splice(0, 1)[0]
             }
             else 
                 return null
-        } while(settings.youtubeApi.quota - verifyCredentialCreditsUsed(randomCredential) < neededCredits)
+        } while(settings.youtubeApi.quota - verifyCredentialCreditsUsed(nextCredential) < neededCredits)
 
-        return randomCredential
+        return nextCredential
     }
 }
     
 async function refreshCredentialsList(credentialsList) {
     return new Promise((resolve, reject) => {
-        fs.readdir(__dirname + '/../credentials/google-youtube/', function (err, files) {
+        fs.readdir(__dirname + '/../credentials/google-youtube/', async function (err, files) {
             if (err) {
                 console.log(`Error on directory scanning: ${err}`)
-                return reject(err)
+                reject(err)
             }
             
             files.forEach((file) => {
@@ -43,9 +42,9 @@ async function refreshCredentialsList(credentialsList) {
                 }
             })
         
-            state.save(credentialsList, __dirname + '/../credentials/google-youtube/credentialsCounter.json')
+            await state.save(credentialsList, __dirname + '/../credentials/google-youtube/credentialsCounter.json')
 
-            return resolve()
+            resolve()
         })
     })
 }
@@ -79,7 +78,7 @@ function verifyCredentialCreditsUsed(credential) {
 }
 
 async function insertRequestInCredential(usedCredential, usedCredits) {
-    const credentialsList = state.load(__dirname + '/../credentials/google-youtube/credentialsCounter.json')
+    const credentialsList = await state.load(__dirname + '/../credentials/google-youtube/credentialsCounter.json')
     await refreshCredentialsList(credentialsList)
 
     credentialsList.forEach((credential) => {
@@ -90,8 +89,8 @@ async function insertRequestInCredential(usedCredential, usedCredits) {
             })
         }
     })
-
-    state.save(credentialsList, __dirname + '/../credentials/google-youtube/credentialsCounter.json')
+    
+    await state.save(credentialsList, __dirname + '/../credentials/google-youtube/credentialsCounter.json')
 }
 
 module.exports = {
