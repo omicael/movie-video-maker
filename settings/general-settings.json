@@ -10,9 +10,10 @@
         "user": "",
         "password": ""
     },
-    "moviesPath": "../movies/",
+    "moviesPath": "F:\\movies\\",
     "moviesListFilePath": "movies-list.json",
     "movieContentFileName": "movie-content.json",
+    "moviesLinksFilePath": "movies-links.json",
     "TMDBimagePath": "https://image.tmdb.org/t/p/original/",
     "video": {
         "imageDuration": 7,

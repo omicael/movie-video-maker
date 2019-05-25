@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/micsmics/movie-video-maker#readme",
   "dependencies": {
+    "cheerio": "^1.0.0-rc.3",
     "express": "^4.16.4",
     "gm": "^1.23.1",
     "googleapis": "^39.2.0",
@@ -26,6 +27,7 @@
     "opn": "^6.0.0",
     "readline-sync": "^1.4.9",
     "request": "^2.88.0",
+    "request-promise": "^4.2.4",
     "selenium-webdriver": "^4.0.0-alpha.1"
   }
 }

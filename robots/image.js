@@ -4,7 +4,7 @@ const fs = require('fs')
 const path = require('path')
 
 async function robot(movieContent) {
-    await creatingFolder(path.normalize(__dirname + '/../' + settings.moviesPath + movieContent.id + '/images/'))
+    await creatingFolder(path.normalize(settings.moviesPath + movieContent.id + '/images/'))
     await downloadAllImages(movieContent)
     
     async function creatingFolder(filePath) {
