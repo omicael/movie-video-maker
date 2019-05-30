@@ -10,6 +10,7 @@ const opn = require('opn')
 const credentials = require('./credentials.js')
 const Nightmare = require('nightmare')
 const youtubeAccountPassword = require('../credentials/google-youtube.json').password
+const fetchMovieLinks = require('./fetch-movie-links.js')
 
 async function uploadToYoutube(movieContent, youtubeUser) {
     let credentialForUse = { credential: null }
@@ -47,7 +48,7 @@ async function uploadToYoutube(movieContent, youtubeUser) {
             }
 
             async function createOAuthClient(service, credentialForUse) {
-                const neededCredits = settings.youtubeApi.neededCredits[service]
+                const neededCredits = (service == 'uploadVideo') ? (settings.youtubeApi.neededCredits[service] + 1000) : (settings.youtubeApi.neededCredits[service])
                 credentialForUse.credential = await credentials.getCredentialJsonFile(neededCredits)
                 if (credentialForUse.credential == null) {
                     console.log('< there is no more credentials available')
@@ -77,16 +78,16 @@ async function uploadToYoutube(movieContent, youtubeUser) {
             }
 
             async function loginAndConsent(consentUrl, youtubeUser) {
-                const nightmare = Nightmare({ show: true, waitTimeout: 10000 })
+                const nightmare = Nightmare({ show: false, waitTimeout: 10000 })
                 await nightmare
                         .goto(consentUrl)
                         .wait("#identifierId")
-                        .type("#identifierId", youtubeUser.email)
+                        .insert("#identifierId", youtubeUser.email)
                         .wait("#identifierNext")
                         .click("#identifierNext")
                         .wait("input[name='password']")
                         .wait(2000)
-                        .type("input[name='password']", youtubeAccountPassword)
+                        .insert("input[name='password']", youtubeAccountPassword)
                         .wait("#passwordNext")
                         .click("#passwordNext")
 
@@ -168,20 +169,25 @@ async function uploadToYoutube(movieContent, youtubeUser) {
    
 
     async function uploadVideo(movieContent, credentialForUse) {
-        let videoFilePath = path.normalize(`${__dirname}/../${settings.moviesPath}${movieContent.id}/video-youtube.mp4`) // se não achar nenhum video longo continua nesse
+        let videoFilePath = path.normalize(`${settings.moviesPath}${movieContent.id}/video-youtube.mp4`) // se não achar nenhum video longo continua nesse
 
-        fs.readdirSync(path.normalize(`${__dirname}/../${settings.moviesPath}${movieContent.id}/`)).forEach(file => {
+        fs.readdirSync(path.normalize(`${settings.moviesPath}${movieContent.id}/`)).forEach(file => {
             if (file.indexOf('MOV') != -1 && file.indexOf('-youtube.mp4') != -1) {
-                videoFilePath = path.normalize(`${__dirname}/../${settings.moviesPath}${movieContent.id}/${file}`)
+                videoFilePath = path.normalize(`${settings.moviesPath}${movieContent.id}/${file}`)
             }
         })
         
+        console.log(`> starting upload ${videoFilePath}`)
+
         const videoFileSize = fs.statSync(videoFilePath).size
         const videoTitle = `FILME ${movieContent.genres[0].name.toUpperCase()} ${movieContent.title.toUpperCase()}`
         const videoTags = []
-        const videoDescription = `Para assistir o FILME COMPLETO acesse o site: http://www.ofilme.org/ \n\n` +
+        const movieLinks = await fetchMovieLinks.getMovieLinks(movieContent)
+        const videoDescription =  `Link para o FILME DUBLADO: ${movieLinks.links.portuguese}\n`
+                                  `Link para o FILME LEGENDADO: ${movieLinks.links.original}\n\n`
+                                  `Para assistir MUITO MAIS FILMES COMPLETOS acesse o site: http://www.ofilme.org/ \n\n` +
                                   `Filme completo dublado e legendado em Full HD\n\n` +
-                                  `Descricao: ${movieContent.overview}`
+                                  `Sinopse: ${movieContent.overview}`
 
         const requestParameters = {
             part: 'snippet, status',
@@ -234,7 +240,7 @@ async function uploadToYoutube(movieContent, youtubeUser) {
 
     async function uploadThumbnail(videoInformation, movieContent, credentialForUse) {
         const videoId = videoInformation.id
-        const videoThumbnailFilePath = path.normalize(`${__dirname}/../${settings.moviesPath}${movieContent.id}/images/thumbnail-0.jpg`)
+        const videoThumbnailFilePath = path.normalize(`${settings.moviesPath}${movieContent.id}/images/thumbnail-0.jpg`)
 
         const requestParameters = {
             videoId: videoId,

@@ -1,6 +1,7 @@
 const robots = {
     settings: require('./settings/general-settings.json'),
     fetchMoviesList: require('./robots/fetch-movies-list.js'),
+    fetchMovieLinks: require('./robots/fetch-movie-links.js'),
     state: require('./robots/state.js'),
     movie: require('./robots/movie.js'),
     image: require('./robots/image.js'),
@@ -37,9 +38,10 @@ function start() {
             
             const movieContent = await robots.movie.fetchMovieInTMDB(moviesList[cont].id)
             //const movieContent = robots.movie.loadMovieData(moviesList[cont].id)
+            await robots.fetchMovieLinks.fetchAndAskMovieLinks(movieContent)
             //await robots.image(movieContent)
             //await robots.video(movieContent)
-            await robots.youtube.uploadToYoutube(movieContent, youtubeUser)
+            //await robots.youtube.uploadToYoutube(movieContent, youtubeUser)
 
             console.log('> done')
         }
